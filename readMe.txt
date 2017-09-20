@@ -1,1 +1,0 @@
--Dont change path of repository of server. If you change, then keep it name Repository only and give path in run.bat till repository.
