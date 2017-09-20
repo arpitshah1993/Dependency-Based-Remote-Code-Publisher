@@ -1,0 +1,12 @@
+﻿  Sockets.cpp
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(161): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(180): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(199): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(240): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(248): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\sockets\sockets.cpp(267): warning C4267: 'argument': conversion from 'size_t' to 'DWORD', possible loss of data
+  Logger.cpp
+  Generating Code...
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+C:\Project4\CSharpCliShim-WPF-App 2\Debug\zWindowsHelpers.lib : warning LNK4272: library machine type 'X86' conflicts with target machine type 'x64'
+C:\Project4\CSharpCliShim-WPF-App 2\x64\Debug\Sockets.exe : fatal error LNK1120: 1 unresolved externals

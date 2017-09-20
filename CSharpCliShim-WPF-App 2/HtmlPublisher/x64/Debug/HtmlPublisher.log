@@ -1,0 +1,4 @@
+﻿  Publisher.cpp
+c:\project4\csharpclishim-wpf-app 2\htmlpublisher\publisher.cpp(198): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\project4\csharpclishim-wpf-app 2\htmlpublisher\publisher.cpp(206): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  HtmlPublisher.vcxproj -> C:\Project4\CSharpCliShim-WPF-App 2\x64\Debug\HtmlPublisher.lib

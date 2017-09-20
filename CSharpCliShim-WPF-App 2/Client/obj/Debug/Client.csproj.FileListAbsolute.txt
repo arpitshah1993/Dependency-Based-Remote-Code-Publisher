@@ -1,0 +1,17 @@
+C:\CSharpCliShim-WPF-App 2\Client\bin\Debug\Client.exe.config
+C:\CSharpCliShim-WPF-App 2\Client\bin\Debug\Client.exe
+C:\CSharpCliShim-WPF-App 2\Client\bin\Debug\Client.pdb
+C:\CSharpCliShim-WPF-App 2\Client\bin\Debug\CLIShim.dll
+C:\CSharpCliShim-WPF-App 2\Client\bin\Debug\CLIShim.pdb
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\MainWindow.g.cs
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\App.g.cs
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client_MarkupCompile.cache
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client_MarkupCompile.lref
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\MainWindow.baml
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.g.resources
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.Properties.Resources.resources
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.exe
+C:\CSharpCliShim-WPF-App 2\Client\obj\Debug\Client.pdb
+\\Mac\Home\Documents\Dependency-Based-Remote-Code-Publisher\CSharpCliShim-WPF-App 2\Client\bin\Debug\Client.exe.config

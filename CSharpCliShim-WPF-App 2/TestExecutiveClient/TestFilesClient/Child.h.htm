@@ -1,0 +1,101 @@
+<!----------------------------------------------------------------------------
+  Child.h.htm
+
+  Published on: Wed May  3 21:53:37 2017
+
+  Arpit Shah, CSE687 - Object Oriented Design, Spring 2017
+
+  Note:
+  - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+    replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+  - Be careful that you don't replace genuine markup characters with escape 
+    sequences, e.g., everything outside of the <pre>...</pre> section.
+----------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="mystyle.css.txt">
+  <script type="text/javascript" src="myscript.js.txt"></script>
+</head>
+<body>
+  <h3>Child.h</h3>
+  <hr />
+  <div class="indent">
+    <h4>Dependencies:</h4><a href="Child.cpp.htm">Child.cpp</a><br>  </div>
+  <hr />
+<pre>#ifndef CHILD_H
+#define CHILD_H
+
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+
+
+int globalData = 10;
+
+namespace ChildTest {
+	
+	struct element</pre><table><tr><td valign="top"><button id="button0" onclick='clickEvent(this,"placeholder0")'> > </button> </td><td valign="top"><div id="placeholder0" style="display: none"><pre> {
+		std::string name, type;
+		int start_line, end_line;
+		std::vector&lt;element&gt; children;
+	};
+</pre></div></td></tr></table><pre>	enum Numbers { one = 1, two, three, four };
+	class Child</pre><table><tr><td valign="top"><button id="button1" onclick='clickEvent(this,"placeholder1")'> > </button> </td><td valign="top"><div id="placeholder1" style="display: none"><pre> {
+	public:
+		Child()</pre><table><tr><td valign="top"><button id="button2" onclick='clickEvent(this,"placeholder2")'> > </button> </td><td valign="top"><div id="placeholder2" style="display: none"><pre> {};
+</pre></div></td></tr></table><pre>		~Child()</pre><table><tr><td valign="top"><button id="button3" onclick='clickEvent(this,"placeholder3")'> > </button> </td><td valign="top"><div id="placeholder3" style="display: none"><pre> {};
+</pre></div></td></tr></table><pre>		void inlineMethod(int a)</pre><table><tr><td valign="top"><button id="button4" onclick='clickEvent(this,"placeholder4")'> > </button> </td><td valign="top"><div id="placeholder4" style="display: none"><pre> {
+			int i;
+			for (i = 0; i &lt; 2; i++) {
+				std::cout &lt;&lt; a;
+				if (i == 1)
+				{
+					std::cout &lt;&lt; i;
+				}
+			}
+			if (i == 1) {
+				std::cout &lt;&lt; a;
+			}
+			else
+			{
+			}
+		}
+</pre></div></td></tr></table><pre>		int method1();
+		int method3();
+		int method2()
+</pre><table><tr><td valign="top"><button id="button5" onclick='clickEvent(this,"placeholder5")'> > </button> </td><td valign="top"><div id="placeholder5" style="display: none"><pre>		{
+			std::cout &lt;&lt; "Hello OOD";
+			return 0;
+		}
+</pre></div></td></tr></table><pre>		int method4();
+	};
+</pre></div></td></tr></table><pre>	
+
+
+	static void globalFunction()</pre><table><tr><td valign="top"><button id="button6" onclick='clickEvent(this,"placeholder6")'> > </button> </td><td valign="top"><div id="placeholder6" style="display: none"><pre> {
+		std::map&lt;int, int&gt; map = { { 1,1 },{ 2,2 } };
+		while (true) {
+			{
+				std::cout &lt;&lt; "\n Global Function";
+			}
+			break;
+		}
+	}
+</pre></div></td></tr></table><pre>}
+
+static void globalFunction1()</pre><table><tr><td valign="top"><button id="button7" onclick='clickEvent(this,"placeholder7")'> > </button> </td><td valign="top"><div id="placeholder7" style="display: none"><pre> {
+	std::map&lt;int, int&gt; map = { { 1,1 },{ 2,2 } };
+	while (true) {
+		{
+			std::cout &lt;&lt; "\n Global Function";
+		}
+		break;
+	}
+}
+</pre></div></td></tr></table><pre>#endif
+
+
+</pre>
+</body>
+</html>

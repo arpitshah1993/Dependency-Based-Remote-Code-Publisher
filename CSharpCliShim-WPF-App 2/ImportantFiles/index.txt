@@ -1,0 +1,21 @@
+<!----------------------------------------------------------------------------
+  index.htm
+  Published 19 Mar 2017
+  Arpit Shah, CSE687 - Object Oriented Design, Spring 2017
+
+  Note:
+  - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+    replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+  - Be careful that you don't replace genuine markup characters with escape 
+    sequences, e.g., everything outside of the <pre>...</pre> section.
+----------------------------------------------------------------------------->
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="../ImportantFiles/mystyle.css.txt">
+  <script type="text/javascript" src="../ImportantFiles/myscript.js.txt"></script>
+</head>
+<body>
+  <h3>Index</h3>
+  <hr />
+  <div class="indent">
+    <h4>Files</h4>

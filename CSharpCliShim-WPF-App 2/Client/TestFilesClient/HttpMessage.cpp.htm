@@ -1,0 +1,362 @@
+<!----------------------------------------------------------------------------
+  HttpMessage.cpp.htm
+
+  Published on: Wed May  3 21:28:36 2017
+
+  Arpit Shah, CSE687 - Object Oriented Design, Spring 2017
+
+  Note:
+  - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+    replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+  - Be careful that you don't replace genuine markup characters with escape 
+    sequences, e.g., everything outside of the <pre>...</pre> section.
+----------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="mystyle.css.txt">
+  <script type="text/javascript" src="myscript.js.txt"></script>
+</head>
+<body>
+  <h3>HttpMessage.cpp</h3>
+  <hr />
+  <div class="indent">
+    <h4>Dependencies:</h4>  </div>
+  <hr />
+<pre>/////////////////////////////////////////////////////////////////////
+// HttpMessage.cpp - Build and parse Http style messages           //
+//                                                                 //
+// Jim Fawcett, CSE687 - Object Oriented Design, Spring 2016       //
+/////////////////////////////////////////////////////////////////////
+
+#include "HttpMessage.h"
+#include "../Utilities/Utilities.h"
+#include &lt;iostream&gt;
+
+using namespace Utilities;
+using Attribute = HttpMessage::Attribute;
+using Attributes = HttpMessage::Attributes;
+using Name = HttpMessage::Name;
+using Value = HttpMessage::Value;
+using Body = HttpMessage::Body;
+using byte = HttpMessage::byte;
+class MockSocket
+</pre><table><tr><td valign="top"><button id="button0" onclick='clickEvent(this,"placeholder0")'> > </button> </td><td valign="top"><div id="placeholder0" style="display: none"><pre>{
+public:
+	MockSocket(const HttpMessage& msg) : msgString_(msg.toString())</pre><table><tr><td valign="top"><button id="button1" onclick='clickEvent(this,"placeholder1")'> > </button> </td><td valign="top"><div id="placeholder1" style="display: none"><pre> {};
+</pre></div></td></tr></table><pre>	std::string recvString();
+	bool recv(size_t bytes, byte* buffer);
+	size_t& setContent_length()</pre><table><tr><td valign="top"><button id="button2" onclick='clickEvent(this,"placeholder2")'> > </button> </td><td valign="top"><div id="placeholder2" style="display: none"><pre> { return content_length_; }
+</pre></div></td></tr></table><pre>private:
+	std::string msgString_;
+	size_t pos_ = 0;
+	size_t content_length_ = 0;
+};
+</pre></div></td></tr></table><pre>
+std::string MockSocket::recvString()
+</pre><table><tr><td valign="top"><button id="button3" onclick='clickEvent(this,"placeholder3")'> > </button> </td><td valign="top"><div id="placeholder3" style="display: none"><pre>{
+	std::string line;
+	char ch;
+	while ((ch = msgString_[pos_++]) != '\n')
+	{
+		line += ch;
+	}
+	return line;
+}
+</pre></div></td></tr></table><pre>
+bool MockSocket::recv(size_t bytes, byte* buffer)
+</pre><table><tr><td valign="top"><button id="button4" onclick='clickEvent(this,"placeholder4")'> > </button> </td><td valign="top"><div id="placeholder4" style="display: none"><pre>{
+	for (size_t i = 0; i &lt; bytes; ++i)
+	{
+		if (pos_ + i == msgString_.size())
+		{
+			std::cout &lt;&lt; "\n---- attempt to index past end of msgString_ ----\n";
+			return false;
+		}
+		buffer[i] = msgString_[pos_ + i];
+	}
+	return true;
+}
+</pre></div></td></tr></table><pre>//----&lt; add attribute pair to attribute collection &gt;-----------------
+
+void HttpMessage::addAttribute(const Attribute& attrib)
+</pre><table><tr><td valign="top"><button id="button5" onclick='clickEvent(this,"placeholder5")'> > </button> </td><td valign="top"><div id="placeholder5" style="display: none"><pre>{
+	attributes_.push_back(attrib);
+}
+</pre></div></td></tr></table><pre>//----&lt; find attribute by name &gt;-------------------------------------
+
+size_t HttpMessage::findAttribute(const Name& name)
+</pre><table><tr><td valign="top"><button id="button6" onclick='clickEvent(this,"placeholder6")'> > </button> </td><td valign="top"><div id="placeholder6" style="display: none"><pre>{
+	for (size_t i = 0; i &lt; attributes_.size(); ++i)
+		if (attributes_[i].first == name)
+			return i;
+	return attributes_.size();
+}
+</pre></div></td></tr></table><pre>//----&lt; find value of attribute with specified name &gt;----------------
+/*
+*  returns empty string if name not found
+*/
+Value HttpMessage::findValue(const Name& name)
+</pre><table><tr><td valign="top"><button id="button7" onclick='clickEvent(this,"placeholder7")'> > </button> </td><td valign="top"><div id="placeholder7" style="display: none"><pre>{
+	Value val = "";
+	size_t pos = findAttribute(name);
+	if (pos &lt; attributes_.size())
+	{
+		val = attributes_[pos].second;
+	}
+	return val;
+}
+</pre></div></td></tr></table><pre>//----&lt; remove attribute by name &gt;-----------------------------------
+
+bool HttpMessage::removeAttribute(const Name& name)
+</pre><table><tr><td valign="top"><button id="button8" onclick='clickEvent(this,"placeholder8")'> > </button> </td><td valign="top"><div id="placeholder8" style="display: none"><pre>{
+	size_t pos = findAttribute(name);
+	if (pos == attributes_.size())
+		return false;
+	std::vector&lt;Attribute&gt;::iterator iter = attributes_.begin() + pos;
+	attributes_.erase(iter);
+	return true;
+}
+</pre></div></td></tr></table><pre>//----&lt; retrieve attribute collection &gt;------------------------------
+
+Attributes& HttpMessage::attributes()
+</pre><table><tr><td valign="top"><button id="button9" onclick='clickEvent(this,"placeholder9")'> > </button> </td><td valign="top"><div id="placeholder9" style="display: none"><pre>{
+	return attributes_;
+}
+</pre></div></td></tr></table><pre>Attribute HttpMessage::parseAttribute(const std::string& src)
+</pre><table><tr><td valign="top"><button id="button10" onclick='clickEvent(this,"placeholder10")'> > </button> </td><td valign="top"><div id="placeholder10" style="display: none"><pre>{
+	Attribute attrib("", "");
+	size_t pos = src.find(':');
+	if (pos == std::string::npos)
+		return attrib;
+	std::string first = StringHelper::trim(src.substr(0, pos));
+	std::string second = StringHelper::trim(src.substr(pos + 1, src.size() - 1));
+	attrib.first = first;
+	attrib.second = second;
+	return attrib;
+}
+</pre></div></td></tr></table><pre>
+//----&lt; fill body from buffer &gt;--------------------------------------
+
+void HttpMessage::setBody(byte buffer[], size_t Buflen)
+</pre><table><tr><td valign="top"><button id="button11" onclick='clickEvent(this,"placeholder11")'> > </button> </td><td valign="top"><div id="placeholder11" style="display: none"><pre>{
+	for (size_t i = 0; i &lt; Buflen; ++i)
+	{
+		body_.push_back(buffer[i]);
+	}
+}
+</pre></div></td></tr></table><pre>//----&lt; fill buffer from body &gt;--------------------------------------
+/*
+*  - returns length of buffer contents
+*  - return value is zero if buffer is too small to hold body
+*/
+size_t HttpMessage::getBody(byte buffer[], size_t& Buflen)
+</pre><table><tr><td valign="top"><button id="button12" onclick='clickEvent(this,"placeholder12")'> > </button> </td><td valign="top"><div id="placeholder12" style="display: none"><pre>{
+	if (Buflen &lt; body_.size())
+		return 0;
+	size_t length = body_.size();
+	for (size_t i = 0; i &lt; length; ++i)
+	{
+		buffer[i] = body_[i];
+	}
+	return length;
+}
+</pre></div></td></tr></table><pre>//----&lt; replace body &gt;-----------------------------------------------
+
+void HttpMessage::addBody(const Body& body)
+</pre><table><tr><td valign="top"><button id="button13" onclick='clickEvent(this,"placeholder13")'> > </button> </td><td valign="top"><div id="placeholder13" style="display: none"><pre>{
+	body_ = body;
+}
+</pre></div></td></tr></table><pre>//----&lt; replace body with contents of string &gt;-----------------------
+
+void HttpMessage::addBody(const std::string& body)
+</pre><table><tr><td valign="top"><button id="button14" onclick='clickEvent(this,"placeholder14")'> > </button> </td><td valign="top"><div id="placeholder14" style="display: none"><pre>{
+	body_.clear();
+	for (auto ch : body)
+		body_.push_back(ch);
+}
+</pre></div></td></tr></table><pre>//----&lt; replace body from buffer contents &gt;--------------------------
+
+void HttpMessage::addBody(size_t numBytes, byte* pBuffer)
+</pre><table><tr><td valign="top"><button id="button15" onclick='clickEvent(this,"placeholder15")'> > </button> </td><td valign="top"><div id="placeholder15" style="display: none"><pre>{
+	for (size_t i = 0; i &lt; numBytes; ++i)
+		body_.push_back(*(pBuffer + i));
+}
+</pre></div></td></tr></table><pre>
+//-----&lt; retrieve body &gt;---------------------------------------------
+
+Body& HttpMessage::body()
+</pre><table><tr><td valign="top"><button id="button16" onclick='clickEvent(this,"placeholder16")'> > </button> </td><td valign="top"><div id="placeholder16" style="display: none"><pre>{
+	return body_;
+}
+</pre></div></td></tr></table><pre>//----&lt; return length of body in bytes &gt;-----------------------------
+
+size_t HttpMessage::bodyLength()
+</pre><table><tr><td valign="top"><button id="button17" onclick='clickEvent(this,"placeholder17")'> > </button> </td><td valign="top"><div id="placeholder17" style="display: none"><pre>{
+	return body_.size() * sizeof(byte);  // may change byte to int
+}
+</pre></div></td></tr></table><pre>//----&lt; convert attribute pair to string &gt;---------------------------
+
+std::string HttpMessage::attribString(const Attribute& attrib)
+</pre><table><tr><td valign="top"><button id="button18" onclick='clickEvent(this,"placeholder18")'> > </button> </td><td valign="top"><div id="placeholder18" style="display: none"><pre>{
+	return attrib.first + ":" + attrib.second + '\n';
+}
+</pre></div></td></tr></table><pre>//----&lt; build attribute from name and value &gt;------------------------
+
+Attribute HttpMessage::attribute(const Name& name, const Value& value)
+</pre><table><tr><td valign="top"><button id="button19" onclick='clickEvent(this,"placeholder19")'> > </button> </td><td valign="top"><div id="placeholder19" style="display: none"><pre>{
+	return std::pair&lt;Name, Value&gt;(name, value);
+}
+</pre></div></td></tr></table><pre>//----&lt; convert message header to string &gt;---------------------------
+
+std::string HttpMessage::headerString() const
+</pre><table><tr><td valign="top"><button id="button20" onclick='clickEvent(this,"placeholder20")'> > </button> </td><td valign="top"><div id="placeholder20" style="display: none"><pre>{
+	std::string header;
+	for (auto attrib : attributes_)
+	{
+		header += attribString(attrib);
+	}
+	header += term_;
+	return header;
+}
+</pre></div></td></tr></table><pre>//----&lt; convert message header to indented string &gt;------------------
+
+std::string HttpMessage::toIndentedHeaderString() const
+</pre><table><tr><td valign="top"><button id="button21" onclick='clickEvent(this,"placeholder21")'> > </button> </td><td valign="top"><div id="placeholder21" style="display: none"><pre>{
+	std::string header = "  ";
+	for (auto attrib : attributes_)
+	{
+		header += attribString(attrib) + "  ";
+	}
+	header += term_;
+	return header;
+}
+</pre></div></td></tr></table><pre>//----&lt; convert body to string &gt;-------------------------------------
+
+std::string HttpMessage::bodyString() const
+</pre><table><tr><td valign="top"><button id="button22" onclick='clickEvent(this,"placeholder22")'> > </button> </td><td valign="top"><div id="placeholder22" style="display: none"><pre>{
+	std::string body;
+	for (char ch : body_)
+		body += ch;
+	return body;
+}
+</pre></div></td></tr></table><pre>
+//----&lt; get message body &gt;----------------------------
+std::string HttpMessage::getMessageBody(std::string message)
+</pre><table><tr><td valign="top"><button id="button23" onclick='clickEvent(this,"placeholder23")'> > </button> </td><td valign="top"><div id="placeholder23" style="display: none"><pre>{
+	return message.substr(5, message.length() - 11);
+	//return "";
+}
+</pre></div></td></tr></table><pre>//----&lt; convert body to indented string &gt;----------------------------
+
+std::string HttpMessage::toIndentedBodyString() const
+</pre><table><tr><td valign="top"><button id="button24" onclick='clickEvent(this,"placeholder24")'> > </button> </td><td valign="top"><div id="placeholder24" style="display: none"><pre>{
+	std::string body = "  ";
+	for (char ch : body_)
+		body += ch;
+	return body;
+}
+</pre></div></td></tr></table><pre>//----&lt; convert message to string &gt;----------------------------------
+
+std::string HttpMessage::toString() const
+</pre><table><tr><td valign="top"><button id="button25" onclick='clickEvent(this,"placeholder25")'> > </button> </td><td valign="top"><div id="placeholder25" style="display: none"><pre>{
+	return headerString() + bodyString();
+}
+</pre></div></td></tr></table><pre>//----&lt; convert message to indented string &gt;-------------------------
+
+std::string HttpMessage::toIndentedString() const
+</pre><table><tr><td valign="top"><button id="button26" onclick='clickEvent(this,"placeholder26")'> > </button> </td><td valign="top"><div id="placeholder26" style="display: none"><pre>{
+	return toIndentedHeaderString() + toIndentedBodyString();
+}
+</pre></div></td></tr></table><pre>//----&lt; remove all message contents &gt;--------------------------------
+
+void HttpMessage::clear()
+</pre><table><tr><td valign="top"><button id="button27" onclick='clickEvent(this,"placeholder27")'> > </button> </td><td valign="top"><div id="placeholder27" style="display: none"><pre>{
+	attributes_.clear();
+	body_.clear();
+}
+</pre></div></td></tr></table><pre>//----&lt; fill buffer with char &gt;--------------------------------------
+
+void HttpMessage::fillBuffer(byte buffer[], size_t BufSize, byte fill)
+</pre><table><tr><td valign="top"><button id="button28" onclick='clickEvent(this,"placeholder28")'> > </button> </td><td valign="top"><div id="placeholder28" style="display: none"><pre>{
+	for (size_t i = 0; i &lt; BufSize; ++i)
+		buffer[i] = fill;
+}
+</pre></div></td></tr></table><pre>
+using Utils = StringHelper;
+
+#ifdef TEST_HTTPMESSAGE
+
+int main()
+</pre><table><tr><td valign="top"><button id="button29" onclick='clickEvent(this,"placeholder29")'> > </button> </td><td valign="top"><div id="placeholder29" style="display: none"><pre>{
+	Utils::Title("Testing HttpMessage class", '=');
+
+	HttpMessage msg;
+	msg.addAttribute(HttpMessage::attribute("Command", "GetFiles"));
+	msg.addAttribute(HttpMessage::attribute("ToAddr", "127.0.0.1:8080"));
+	msg.addAttribute(HttpMessage::attribute("FromAddr", "127.0.0.1:8081"));
+	msg.addAttribute(HttpMessage::attribute("Mode", "OneWay"));
+	msg.addAttribute(HttpMessage::attribute("content_length", "10"));
+
+	msg.addBody(std::vector&lt;HttpMessage::byte&gt;</pre><table><tr><td valign="top"><button id="button30" onclick='clickEvent(this,"placeholder30")'> > </button> </td><td valign="top"><div id="placeholder30" style="display: none"><pre> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+</pre></div></td></tr></table><pre>
+	std::cout &lt;&lt; "\n" &lt;&lt; Utils::addHeaderAndFooterLines(msg.toString());
+
+	Utils::title("testing headerString(), bodyString(), and toString()");
+	std::cout &lt;&lt; "\nheader string:";
+	std::cout &lt;&lt; "\n" &lt;&lt; msg.headerString();
+	std::cout &lt;&lt; "\nbody string:";
+	std::cout &lt;&lt; "\n" &lt;&lt; msg.bodyString();
+	std::cout &lt;&lt; "\n\nmessage string:";
+	std::cout &lt;&lt; "\n" &lt;&lt; StringHelper::addHeaderAndFooterLines(msg.toString());
+
+	Utils::title("Testing removeAttribute");
+	putline();
+	msg.removeAttribute("content_length");
+	std::cout &lt;&lt; msg.toString();
+	putline();
+
+	Utils::title("Testing addBody(const std::string&)");
+	std::string msgBody = "&lt;msg&gt;this is a message&lt;/msg&gt;";
+	msg.addAttribute(HttpMessage::Attribute("content_length", Converter&lt;size_t&gt;::toString(msgBody.size())));
+	msg.addBody(msgBody);
+	std::cout &lt;&lt; "\n" &lt;&lt; StringHelper::addHeaderAndFooterLines(msg.toString());
+
+	Utils::title("Testing parseAttribute(const std::string&)");
+	std::string test2 = "name:value";
+	std::cout &lt;&lt; "\n  input = \"" &lt;&lt; test2 &lt;&lt; "\"";
+	Attribute attrib2 = HttpMessage::parseAttribute(test2);
+	std::cout &lt;&lt; "\n  result is: " &lt;&lt; HttpMessage::attribString(attrib2);
+
+	test2 = " name : value ";
+	std::cout &lt;&lt; "\n  input = \"" &lt;&lt; test2 &lt;&lt; "\"";
+	attrib2 = HttpMessage::parseAttribute(test2);
+	std::cout &lt;&lt; "\n  result is: " &lt;&lt; HttpMessage::attribString(attrib2);
+
+	Utils::title("Testing Message parsing");
+	MockSocket sock(msg);
+	HttpMessage msg2;
+	while (true)
+	{
+		std::string line = sock.recvString();
+		if (line.size() == 0)
+			break;
+		Attribute attrib = HttpMessage::parseAttribute(line);
+		msg2.addAttribute(attrib);
+	}
+	Value val = msg2.findValue("content_length");
+	if (val.size() &gt; 0)
+	{
+		size_t numBytes = Converter&lt;size_t&gt;::toValue(val);
+		byte* pBuffer = new byte[numBytes];
+		sock.recv(numBytes, pBuffer);
+		msg2.addBody(numBytes, pBuffer);
+	}
+	std::cout &lt;&lt; "\n" &lt;&lt; Utils::addHeaderAndFooterLines(msg2.toString());
+	std::cout &lt;&lt; "\n\n";
+}
+</pre></div></td></tr></table><pre>#endif
+
+</pre>
+</body>
+</html>

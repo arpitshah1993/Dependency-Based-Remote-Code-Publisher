@@ -1,0 +1,14 @@
+ function clickEvent(button_, s) {
+            if (button_ !== "undefined") {
+                if (button_.textContent.includes(">"))
+                { button_.textContent = "<"; }
+                else
+                { button_.textContent = ">"; }
+            }
+            var x = document.getElementById(s);
+            if (x.style.display === 'none') {
+                x.style.display = '';
+            } else {
+                x.style.display = 'none';
+            }
+        }

@@ -1,0 +1,14 @@
+﻿  StrongComponent.cpp
+c:\project4\csharpclishim-wpf-app 2\graph\graph.h(301): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  c:\project4\csharpclishim-wpf-app 2\graph\graph.h(283): note: while compiling class template member function 'std::vector<std::list<std::string,std::allocator<_Ty>>,std::allocator<std::list<_Ty,std::allocator<_Ty>>>> GraphLib::Graph<std::string,std::string>::SCC(void)'
+          with
+          [
+              _Ty=Key
+          ]
+  c:\project4\csharpclishim-wpf-app 2\strongcomponent\strongcomponent.cpp(42): note: see reference to function template instantiation 'std::vector<std::list<std::string,std::allocator<_Ty>>,std::allocator<std::list<_Ty,std::allocator<_Ty>>>> GraphLib::Graph<std::string,std::string>::SCC(void)' being compiled
+          with
+          [
+              _Ty=Key
+          ]
+  c:\project4\csharpclishim-wpf-app 2\strongcomponent\strongcomponent.h(40): note: see reference to class template instantiation 'GraphLib::Graph<std::string,std::string>' being compiled
+  StrongComponent.vcxproj -> C:\Project4\CSharpCliShim-WPF-App 2\x64\Debug\StrongComponent.lib

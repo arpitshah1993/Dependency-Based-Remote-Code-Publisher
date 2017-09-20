@@ -1,0 +1,16 @@
+  Arpit Shah, CSE687 - Object Oriented Design, Spring 2017
+
+  Note:
+  - Markup characters in the text part, enclosed in <pre>...</pre> have to be
+    replaced with escape sequences, e.g., < becomes &lt; and > becomes &gt;
+  - Be careful that you don't replace genuine markup characters with escape 
+    sequences, e.g., everything outside of the <pre>...</pre> section.
+----------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="mystyle.css.txt">
+  <script type="text/javascript" src="myscript.js.txt"></script>
+</head>
+<body>
+  <h3>
